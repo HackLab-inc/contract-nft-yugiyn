@@ -1,0 +1,23 @@
+{
+  "name": "yu-gi-yn",
+  "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "test": "truffle test --network development",
+    "compile": "truffle compile",
+    "compile:reset": "truffle compile --reset",
+    "migrate:development": "truffle migrate --network development",
+    "migrate:testnet": "truffle migrate --network testnet",
+    "migrate:mainnet": "truffle migrate --network mainnet"
+  },
+  "devDependencies": {
+    "@openzeppelin/contracts": "^4.7.3",
+    "@truffle/hdwallet-provider": "^2.1.0",
+    "chai": "^4.3.6",
+    "dotenv": "^16.0.3",
+    "erc721a": "^4.2.3",
+    "fs": "^0.0.1-security",
+    "mocha": "^10.0.0"
+  }
+}
