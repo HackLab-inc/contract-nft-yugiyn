@@ -8,12 +8,23 @@ const MAX_SUPPLY = 8888;
 
 contract('YuGiYn', accounts => {
   const [
-    deployer
+    deployer,
+    user01
   ] = accounts;
 
   let contracts = null;
 
   const fromDeployer = { from: deployer };
+  const fromUser01 = { from: user01 };
+
+  const assertRevert = async (promise) => {
+    try {
+      await promise();
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
 
   beforeEach(async function() {
     contracts = await YuGiYn.new(fromDeployer);
@@ -53,8 +64,39 @@ contract('YuGiYn', accounts => {
   });
 
   describe('mint', function() {
-    it('mint', async function() {
-      await contracts.mint();
+    it('should be able to mint the specified quantity.', async function() {
+      const quantity = 5;
+      await contracts.mint(user01, quantity, fromDeployer);
+
+      const balanceOf = await contracts.balanceOf(user01, fromUser01);
+
+      Number(balanceOf).should.be.equal(quantity);
+    });
+
+    it('should be transferred to the account specified by the minted token.', async function() {
+      const quantity = 1;
+      await contracts.mint(user01, quantity, fromDeployer);
+
+      const ownerOf = await contracts.ownerOf(2, fromUser01);
+      ownerOf.should.be.equal(user01);
+    });
+
+    it('Fails if executed by anyone other than the owner.', async function() {
+      try {
+        const quantity = 1;
+        await contracts.mint(user01, quantity, fromUser01);
+      } catch (error) {
+        error.message.should.be.equal('Returned error: VM Exception while processing transaction: revert Ownable: caller is not the owner');
+      }
+    });
+
+    it('Fails if executed by anyone other than the owner.', async function() {
+      try {
+        const quantity = 1;
+        await contracts.mint(user01, quantity, fromUser01);
+      } catch (error) {
+        error.message.should.be.equal('Returned error: VM Exception while processing transaction: revert Ownable: caller is not the owner');
+      }
     });
   });
 });
